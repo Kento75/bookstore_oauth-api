@@ -17,7 +17,7 @@ type DbRepository interface {
 type dbRepository struct {
 }
 
-func (r *dbRepository) GetById(string) (*access_token.AccessToken, *errors.RestErr) {
+func (r *dbRepository) GetById(id string) (*access_token.AccessToken, *errors.RestErr) {
 	session, err := cassandra.GetSession()
 	if err != nil {
 		panic(err)
