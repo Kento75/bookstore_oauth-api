@@ -2,7 +2,10 @@ package access_token
 
 import (
 	"fmt"
+	"strings"
 	"time"
+
+	"github.com/Kento75/bookstore_oauth-api/src/domain/access_token/utils/errors"
 )
 
 // REST Provider
@@ -21,6 +24,24 @@ type AccessToken struct {
 	UserId      int64  `json:"user_id"`
 	ClientId    int64  `json:"client_id"`
 	Expires     int64  `json:"expires"`
+}
+
+func (at *AccessToken) Validate() *errors.RestErr {
+	at.AccessToken = strings.TrimSpace(at.AccessToken)
+	if at.AccessToken == "" {
+		return errors.BadRequestError("invalid access token id")
+	}
+	if at.UserId <= 0 {
+		return errors.BadRequestError("invalid user id")
+	}
+	if at.ClientId <= 0 {
+		return errors.BadRequestError("invalid client id")
+	}
+	if at.Expires <= 0 {
+		return errors.BadRequestError("invalid expiration time")
+	}
+
+	return nil
 }
 
 func GetNoewAccessToken() AccessToken {
