@@ -32,6 +32,7 @@ func (r *usersRepository) LoginUser(email string, password string) (*users.User,
 		Password: password,
 	}
 	// README -> https://github.com/federicoleon/golang-restclient
+	// bookstore_users-api
 	response := usersRestClient.Post("/users/login", request)
 
 	if response == nil || response.Response == nil {

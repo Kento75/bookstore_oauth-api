@@ -11,8 +11,39 @@ import (
 // REST Provider
 
 const (
-	expirationTime = 24
+	expirationTime             = 24
+	grantTypePassword          = "password"
+	grantTypeClientCredentials = "client_credentials"
 )
+
+type AccessTokenRequest struct {
+	GrantType string `json:"grant_type"`
+	Scope     string `json:"scope"`
+
+	// Used for password grant type
+	Username string `json:"username"`
+	Password string `json:"password"`
+
+	// Used for client_credentials grant type
+	ClientId     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+}
+
+func (at *AccessTokenRequest) Validate() *errors.RestErr {
+	switch at.GrantType {
+	// 認証タイプ パスワードの場合
+	case grantTypePassword:
+		break
+		// 認証タイプ クレデンシャルの場合
+	case grantTypeClientCredentials:
+		break
+	default:
+		return errors.BadRequestError("invalid grant_type parameter")
+	}
+
+	// TODO: validate parameters for each grant_type
+	return nil
+}
 
 /**
  * sample ↓
@@ -44,7 +75,7 @@ func (at *AccessToken) Validate() *errors.RestErr {
 	return nil
 }
 
-func GetNoewAccessToken() AccessToken {
+func GetNewAccessToken() AccessToken {
 	return AccessToken{
 		Expires: time.Now().UTC().Add(expirationTime * time.Hour).Unix(),
 	}
